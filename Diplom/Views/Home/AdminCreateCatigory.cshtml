@@ -1,0 +1,16 @@
+﻿@model Diplom.Models.Catigory
+
+@{
+    ViewBag.Title = "Добавление категорий";
+}
+<form asp-action="AdminCreateCatigory" asp-controller="Home" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="name" class="control-label">Название катеогии</label>
+        <input type="text" asp-for="name" class="form-control" />
+    </div>
+
+    <br />
+    <div class="form-group">
+        <input type="submit" style="background-color: #66a5ad !important; color: white" value="Отправить" class="btn btn-default" />
+    </div>
+</form>

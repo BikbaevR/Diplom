@@ -1,0 +1,105 @@
+﻿@model Diplom.Models.Events
+@{
+    ViewBag.Title = "Добавление мероприятия";
+}
+<form asp-action="Create" asp-controller="Home" enctype="multipart/form-data" method="post">
+
+    
+    <div class="form-group">
+        <label asp-for="catigory" class="control-label">Категория</label>
+        @Html.DropDownListFor(model => model.catigory, ViewBag.catigoryItems as SelectList, new { @class = "form-control" })
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">Название</label>
+        <input type="text" asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="short_description" class="control-label">Короткое описание</label>
+        <input type="text" asp-for="short_description" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="description" class="control-label">Полное описание</label>
+        <textarea type="text" asp-for="description" class="form-control" rows="10"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="img_one" class="control-label">Картинка 1</label>
+        <input accept="image/*" required onchange="showPreview_one(event);" type="file" asp-for="img_one" class="form-control" />
+
+        <img style="max-width:250px; margin:1%;" id="file-ip-1-preview">
+    </div>
+
+    <div class="form-group">
+        <label asp-for="img_two" class="control-label">Картинка 2</label>
+        <input accept="image/*" required onchange="showPreview_two(event);" type="file" asp-for="img_two" class="form-control" />
+
+        <img style="max-width:250px; margin:1%;" id="file-ip-2-preview">
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="img_three" class="control-label">Картинка 3</label>
+        <input accept="image/*" required onchange="showPreview_three(event);" type="file" asp-for="img_three" class="form-control" />
+
+        <img style="max-width:250px; margin:1%;" id="file-ip-3-preview">
+    </div>
+
+    <div class="form-group">
+        <label asp-for="age_limit" class="control-label">Возростное ограничение</label>
+        <input type="number" asp-for="age_limit" min="1" max="70" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="start_date" class="control-label">Дата начала</label>
+        <input type="datetime-local" asp-for="start_date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="city" class="control-label">Город проведения</label>
+        <input type="text" asp-for="city" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="registrations_required" class="control-label">Необходимое количество участников</label>
+        <input type="number" asp-for="registrations_required" min="1" class="form-control" />
+    </div>
+
+    <br />
+    <div class="form-group">
+        <input type="submit" style="background-color: #66a5ad !important; color: white" value="Отправить" class="btn btn-default" />
+    </div>
+</form>
+
+
+<script>
+    function showPreview_one(event){
+        if(event.target.files.length > 0){
+        var src = URL.createObjectURL(event.target.files[0]);
+        var preview = document.getElementById("file-ip-1-preview");
+        preview.src = src;
+        preview.style.display = "block";
+        }
+    }
+
+    function showPreview_two(event) {
+        if (event.target.files.length > 0) {
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("file-ip-2-preview");
+            preview.src = src;
+            preview.style.display = "block";
+        }
+    }
+
+    function showPreview_three(event) {
+        if (event.target.files.length > 0) {
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("file-ip-3-preview");
+            preview.src = src;
+            preview.style.display = "block";
+        }
+    }
+</script>

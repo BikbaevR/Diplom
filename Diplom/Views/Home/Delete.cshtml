@@ -1,0 +1,18 @@
+﻿@model Diplom.Models.Events
+@{
+    ViewBag.Title = "Удаление мероприятия";
+}
+
+<div>
+    <h1>Вы уверены что хотите удалить данную запись <b>@Model.Name</b>?</h1><br />
+</div>
+
+<div>
+    <form asp-controller="Home" asp-action="ConfirmDelete" method="post">
+        <input type="text" name="Id" value="@ViewBag.Id" readonly />
+        <div class="form-group">
+            <input type="submit"  class="btn btn-danger" value="Удалить" />
+        </div>
+    </form>
+</div>
+</div>

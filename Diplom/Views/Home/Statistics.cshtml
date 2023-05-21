@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Diplom.Models.Events>
+
+
+<div>
+
+	<div class="flex-container">
+		<div class="first">
+			<hr />
+			<div>
+				<p style="font-size:20px;"><b>Мои мероприятия</b></p>
+			</div>
+
+
+			@foreach (var item in Model)
+			{
+				<div class="info">
+					<div class="info-text">
+						<p>
+							<b>Название: </b>@item.Name<br />
+							<b>Описание: </b>@item.short_description<br />
+
+
+							<b>Автор: </b>@item.created_by<br />
+							<b>Начало: </b>@item.start_date<br />
+							<b>Рейтинг: </b>@item.rating<br />
+							<br />
+
+							<a asp-action="StatisticsDetail" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Посмотреть статистику</a>
+
+						</p>
+					</div>
+
+					<div class="img">
+						<img class="img-img" src="~/img/events/@item.img_one">
+					</div>
+				</div>
+				<div class="empty"></div>
+			}
+
+		</div>
+
+	</div>
+
+
+</div>

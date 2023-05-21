@@ -1,0 +1,34 @@
+﻿@model Diplom.ViewModels.EditUserViewModel
+
+
+<form asp-action="EditUserData" asp-controller="Account" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="text" name="Id" value="@ViewBag.Id" readonly />
+    <div class="form-group">
+        <input type="hidden" asp-for="Id" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label">Email</label>
+        <input type="text" asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="UserName" class="control-label">UserName</label>
+        <input type="text" asp-for="UserName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="image" class="control-label">Картинка</label>
+        <input type="file" asp-for="image" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="linkToVk" class="control-label">Ссылка на Вк</label>
+        <input type="text" asp-for="linkToVk" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="birthDay" class="control-label">Год рождения</label>
+        <input type="date" asp-for="birthDay" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
+    </div>
+</form>

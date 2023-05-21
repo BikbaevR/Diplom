@@ -1,0 +1,17 @@
+﻿@model Diplom.Models.Registration
+
+
+
+
+
+
+
+<form asp-action="Registration" asp-controller="Home" enctype="multipart/form-data" method="post">
+    <input type="text" name="eventsId" asp-for="event_id" value="@ViewBag.eventsId" readonly />
+    <input type="text" name="userId" asp-for="user_id" value="@ViewBag.userId;" readonly />
+
+    <br />
+    <div class="form-group">
+        <input type="submit" style="background-color: #66a5ad !important; color: white" value="Отправить" class="btn btn-default" />
+    </div>
+</form>

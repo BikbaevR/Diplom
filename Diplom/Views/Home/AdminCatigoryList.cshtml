@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Diplom.Models.Catigory>
+
+
+<p>Список категорий</p>
+
+<div>
+    <a asp-action="AdminCreateCatigory" asp-controller="Home" class="btn btn-primary">Создать категорию</a>
+</div>
+
+<hr />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Название категории</th>
+            <th>Изменить</th>
+            <th>Удалить</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cat in Model)
+        {
+            <tr>
+                <th scope="row">@cat.Id</th>
+                <td>@cat.name</td>
+                <td><a asp-action="AdminEditCatigory" asp-controller="Home" asp-route-Id ="@cat.Id" class="btn btn-primary">Изменить категорию</a></td>
+                <td><a asp-action="AdminDeleteCatigory" asp-controller="Home" asp-route-Id="@cat.Id" class="btn btn-danger">Удалить категорию</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+    

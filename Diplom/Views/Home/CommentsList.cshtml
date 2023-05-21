@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Diplom.Models.Comments>
+
+
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager
+
+
+
+<div>
+    <a asp-action="CommentsList" asp-controller="Home" name="hide" asp-route-hide="1" class="btn btn-primary">Показать только скрытые комментарии</a>
+    <a asp-action="CommentsList" asp-controller="Home" name="unhide" asp-route-unhide="1" class="btn btn-primary">Показать только не скрытые комментарии</a>
+    <a asp-action="CommentsList" asp-controller="Home" name="unhide" asp-route-all="1" class="btn btn-primary">Показать все комментарии</a>
+</div>
+
+<hr />
+<div class="flex-container">
+    <div class="first">
+
+        @foreach (var com in Model)
+        {
+
+            string name = @com.user_id;
+            char charToRemove = ';';
+            name = name.Remove(name.IndexOf(charToRemove), 1);
+
+            var user = await userManager.FindByIdAsync(name);
+            var userName = user.UserName;
+
+
+            int Id = com.event_id;
+
+            <div class="info">
+                <div class="info-text">
+                    <p>
+                    <p><b>Автор: </b>@userName<br />
+                    <b>Дата комментария: </b> @com.comment_date<br />
+                    <b>Комментарий: </b>@com.comment</p>
+                    <a asp-action="Details" asp-controller="Home" asp-route-id="@Id" class="btn btn-primary">Перейти к комментарию</a>
+
+                    @if(com.edit == false)
+                    {
+                        <a asp-action="AdminHideComment" asp-controller="Home" asp-route-id="@com.Id" class="btn btn-primary">Скрыть</a>
+                    }
+                    else
+                    {
+                        <a asp-action="AdminUnHideComment" asp-controller="Home" asp-route-id="@com.Id" class="btn btn-primary">Отобразить</a>
+                    }
+                    </p>
+                    
+                    
+                </div>
+            </div>
+            <div class="empty"></div>
+        }
+
+    </div>
+
+</div>
+
+

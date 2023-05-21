@@ -1,0 +1,28 @@
+﻿@model Diplom.ViewModels.CreateUserViewModel
+@{
+    ViewBag.Title = "Добавление пользователя";
+}
+<form method="post" asp-controller="Users" asp-action="Create">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="mb-2">
+        <input type="email" id="form3Example3" class="form-control" asp-for="Email" placeholder="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div class="mb-2">
+        <input type="text" id="form3Example3" class="form-control" asp-for="UserName" placeholder="Имя пользователя" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div class="mb-2">
+        <input type="date" id="form3Example3" class="form-control" asp-for="birthDay" />
+        <span asp-validation-for="birthDay"></span>
+    </div>
+    <div class="mb-2">
+        <input type="password" id="form3Example3" class="form-control" asp-for="Password" placeholder="Пароль" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-block">
+            Создать пользователя
+        </button>
+    </div>
+</form>

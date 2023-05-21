@@ -1,0 +1,30 @@
+﻿@model Diplom.Models.CountOfView
+@{
+    ViewBag.Title = "Добавление статистики";
+}
+<form asp-action="ConfirmAddStatistics" asp-controller="Home" enctype="multipart/form-data" method="post">
+
+
+
+    <div class="form-group">
+        <label asp-for="EventId" class="control-label">Мероприятие</label>
+        <input type="number" asp-for="EventId" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="date" class="control-label">День</label>
+        <input type="date" asp-for="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="count" class="control-label">Кол-во</label>
+        <textarea type="number" asp-for="count" class="form-control"></textarea>
+    </div>
+
+    <br />
+    <div class="form-group">
+        <input type="submit" style="background-color: #66a5ad !important; color: white" value="Отправить" class="btn btn-default" />
+    </div>
+</form>
+
+

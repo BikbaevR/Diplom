@@ -1,0 +1,243 @@
+﻿@model Diplom.Models.Events
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager
+
+
+
+
+<div>
+
+	@{
+		int age = 0;
+	}
+
+	@if (User.Identity.IsAuthenticated)
+	{
+		var getUser = User.Identity.Name;
+		
+		@if (Model.created_by == getUser)
+		{
+			<a asp-action="Edit" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-primary">Изменить</a>
+		}
+
+
+		var getUserAge = userManager.Users.Where(s => s.UserName == getUser);
+
+
+		DateTime birthDay = new DateTime();
+
+		foreach(var us in getUserAge)
+		{
+			birthDay = us.birthDay;
+		}
+
+
+		age = DateTime.Today.Year - birthDay.Year;
+		if (birthDay > DateTime.Today.AddYears(-age))
+		{
+			age--;
+		}
+	}
+
+	
+</div>
+
+<div>
+	<h1>@Model.Name</h1><br />
+	<div class="container">
+		<img class="img-img" src="~/img/events/@Model.img_one" onclick="zoom()">
+		<img class="img-img" src="~/img/events/@Model.img_two" onclick="zoom()">
+		<img class="img-img" src="~/img/events/@Model.img_three" onclick="zoom()">
+    </div>
+    <br />
+
+	<p><b>Краткое описание: </b>@Model.short_description<br />
+	<b>Полное описание: </b>@Model.description<br />
+	<b>Автор: </b>@Model.created_by<br />
+	<b>Начало мероприятия: </b>@Model.start_date<br />
+	<b>Возростное ограничение: </b>@Model.age_limit<br />
+	@*<b>@ViewBag.appreciated</b><br />*@
+	<b>Рейтинг: </b>@Model.rating<br />
+	<b>Необходимое кол-во участников: </b> @Model.registrations_required<br />
+	<b>Зарегистрировалось: </b> @Model.number_of_registration</p>
+	
+</div>
+
+
+
+@if(Model.status != "close")
+{
+	@if(Model.age_limit < age)
+	{
+		@if (@ViewBag.register == "false")
+		{
+			<div>
+				<a asp-action="Registration" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-success">Зарегистрироваться на мероприятие</a>
+			</div>
+		}
+
+		@if (@ViewBag.register == "true")
+		{
+			<div>
+				<a asp-action="UnRegistration" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-danger">Отменить регистрацию</a>
+			</div>
+		}
+
+		<br />
+
+		@if (@ViewBag.register == "true" & @ViewBag.appreciated == "false"){
+			<div>
+				<a asp-action="appreciated" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-success">Рекомендовать</a>
+			</div>
+		}
+
+		@if (@ViewBag.register == "true" & @ViewBag.appreciated == "true")
+		{
+			<div>
+				<a asp-action="Unappreciated" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-danger">Снять рекомендацию</a>
+			</div>
+		}
+	}
+	else
+	{
+		<div>
+			<p style="color:red"><b>Извините, вы не можете зарегистрироваться на данное мероприятие так как его возрастное ограничение @Model.age_limit лет</b></p>
+		</div>
+	}
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+
+
+	<form asp-action="Comment" asp-controller="Home" enctype="multipart/form-data" method="post">
+		<input hidden type="text" name="Id" value="@Model.Id" readonly />
+		<div class="form-group">
+			<label class="control-label">Комментарии</label>
+			<textarea type="text" name="comment" rows="10" class="form-control"></textarea>
+		</div>
+
+		<br />
+		<div class="form-group">
+			<input type="submit" style="background-color: #66a5ad !important; color: white" value="Отправить" class="btn btn-default" />
+		</div>
+
+	</form>
+}
+<hr />
+
+
+
+
+@if (@ViewBag.CommentsNull != true)
+{
+	@foreach (var com in ViewBag.comment)
+	{
+
+		string name = @com.user_id;
+		char charToRemove = ';';
+		name = name.Remove(name.IndexOf(charToRemove), 1);
+
+		var user = await userManager.FindByIdAsync(name);
+		var userName = user.UserName;
+
+
+
+		<div class="container m-2">
+			<div class="row">
+				<div class="col-2">
+					<img style="width: 70%; height: 70%;" src="~/img/@user.image" alt="Card image cap">
+				</div>
+				<div class="col-6">
+					<p>
+						<b>Автор: </b>@userName<br />
+						<b>Дата написания: </b>@com.comment_date
+					</p>
+					
+					@if (@com.edit == false)
+					{
+						<p><b>Комментарий: </b>@com.comment</p>
+					}
+					else
+					{
+						<p><i>Комментарий был скрыт администратором</i></p>
+					}
+
+					
+				</div>
+			</div>
+		</div>
+	}
+}
+
+
+
+
+<script>
+    var images = document.querySelectorAll('img');
+    for (var i = 0; i < images.length; i++) {
+        if (!images[i].src) {
+            images[i].style.display = 'none';
+        }
+    }
+
+
+
+
+
+		function zoom() {
+			var img = event.target;
+			var modal = document.createElement('div');
+			modal.style.position = 'fixed';
+			modal.style.top = '0';
+			modal.style.left = '0';
+			modal.style.width = '100%';
+			modal.style.height = '100%';
+			modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+			modal.style.display = 'flex';
+			modal.style.justifyContent = 'center';
+			modal.style.alignItems = 'center';
+			var modalImg = document.createElement('img');
+			modalImg.src = img.src;
+			modalImg.style.width = '80%';
+			modalImg.style.height = '80%';
+			modalImg.style.objectFit = 'contain';
+			modal.appendChild(modalImg);
+			document.body.appendChild(modal);
+			modal.addEventListener('click', function () {
+				document.body.removeChild(modal);
+			});
+		}
+</script>
+
+
+
+
+
+<style>
+    img:not([src]) {
+        display: none;
+    }
+
+
+	.container {
+		display: flex;
+		flex-wrap: wrap;
+
+	}
+
+	.container img {
+		width: 240px;
+		height: auto;
+		margin:1%;
+		cursor: pointer;
+
+	}
+
+
+
+</style>
+
+
+

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Diplom.Models.Events>
+
+
+
+
+
+<div class="flex-container">
+    <div class="first">
+        <div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-action="Create" asp-controller="Home" class="btn btn-primary">Создать мероприятие</a>
+            }
+        </div>
+        <hr />
+
+        @foreach (var item in Model)
+        {
+            <div class="info">
+                <div class="info-text">
+                    <p>
+                        <b>Название: </b>@item.Name<br />
+                        <b>Описание: </b>@item.short_description<br />
+
+
+                        <b>Автор: </b>@item.created_by<br />
+                        <b>Начало: </b>@item.start_date<br />
+                        <b>Рейтинг: </b>@item.rating<br />
+                        <br />
+
+                        <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Подробнее</a>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
+                            <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">Удалить</a>
+                        }
+
+                    </p>
+                </div>
+
+                <div class="img">
+                    <img class="img-img" src="~/img/events/@item.img_one">
+                </div>
+            </div>
+            <div class="empty"></div>
+        }
+
+    </div>
+
+</div>
+
+

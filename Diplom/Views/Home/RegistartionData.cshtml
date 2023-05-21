@@ -1,0 +1,38 @@
+﻿@model List<Diplom.ViewModels.RegistrationClass>;
+
+
+<h1>Мероприятия на которые вы зарегистрированны</h1>
+
+<div class="flex-container">
+    <div class="first">
+        @foreach (var item in Model)
+        {
+            <div class="info">
+                <div class="info-text">
+                    <p>
+                        @item.Name<br />
+                        @item.short_description<br />
+
+
+                        @item.created_by<br />
+                        @item.start_date<br />
+                        <br />
+
+                        <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Подробнее</a>
+
+
+                    </p>
+                </div>
+
+                <div class="img">
+                    <img class="img-img" src="~/img/events/@item.img_one">
+                </div>
+            </div>
+            <div class="empty"></div>
+        }
+
+    </div>
+
+</div>
+
+

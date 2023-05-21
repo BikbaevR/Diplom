@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Diplom.Models.CountOfView>
+
+
+<div>
+    <p><a asp-action="AdminStatistics" asp-controller="Home" asp-route-all="1" class="btn btn-primary">Показать всю статистику</a>
+        <a asp-action="AdminStatistics" asp-controller="Home" asp-route-today="1" class="btn btn-primary">Показать статистику за сегодня</a>
+    </p>
+    <br />
+    <form asp-action="AdminStatistics" asp-controller="Home">
+        <div class="form-group">
+            <label name="date" class="control-label">Выберите дату</label>
+            <input type="date" name="date" class="form-control" />
+        </div>
+
+        <br />
+        <div class="form-group">
+            <input type="submit" style="background-color: #66a5ad !important; color: white" value="Отправить" class="btn btn-default" />
+        </div>
+    </form>
+
+</div>
+
+<hr />
+
+
+<div>
+    <p><b>Общее кол-во просмотров мероприятий:</b> @ViewBag.total</p>
+</div>
+
+<hr />
+
+<p><b>Общее кол-во просмотров у каждого мероприятия</b></p>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th>Id Мероприятия</th>
+            <th>Кол-во просмотров</th>
+            <th>Перейти на страницу</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counts = 0;
+        }
+        
+        @foreach (var a in @ViewBag.result)
+        {
+            counts += 1;
+            <tr>
+                <td scope="row">@counts</td>
+                <td>@a.EventsId</td>
+                <td>@a.count</td>
+                <td><a asp-action="Details" asp-controller="Home" asp-route-id="@a.EventsId" class="btn btn-primary">Подробнее</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<hr />
+
+<p><b>Просмотры по дням</b></p>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th>Id мероприятия</th>
+            <th>Дата</th>
+            <th>Кол-во просмотров</th>
+            <th>Перейти на страницу</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var count in Model)
+        {
+            <tr>
+                <td scope="row">@count.Id</td>
+                <td scope="row">@count.EventId</td>
+                <td scope="row">@count.date</td>
+                <td>@count.count</td>
+                <td><a asp-action="Details" asp-controller="Home" asp-route-id="@count.EventId" class="btn btn-primary">Подробнее</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

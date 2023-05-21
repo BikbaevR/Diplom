@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Diplom.Models.CountOfView>
+
+
+
+<div>
+    <p><b>Общее кол-во просмотров данного мероприятия: </b>@ViewBag.Views</p>
+</div>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th>Дата</th>
+            <th>Кол-во просмотров</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var count in Model)
+        {
+            <tr>
+                <td scope="row">@count.Id</td>
+                <td scope="row">@count.date</td>
+                <td>@count.count</td>
+            </tr>
+        }
+    </tbody>
+</table>
