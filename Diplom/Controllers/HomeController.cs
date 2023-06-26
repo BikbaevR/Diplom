@@ -1,5 +1,6 @@
 ﻿using Diplom.Models;
 using Diplom.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -29,11 +31,17 @@ namespace Diplom.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? paid, int? nopaid, int? all, string? viewcatigory, string? search, int? close)
         {
 
-            var events = db.Events.ToList();
+            var topRate = db.Events.OrderByDescending(o => o.rating).Where(s => s.status != "close").Take(5);
 
+            ViewBag.topRate = topRate;
+
+
+            var catigory = db.Category.ToList();
+
+            ViewBag.catigoryItems = catigory;
 
             Events[] eventsDate = db.Events.ToArray();
 
@@ -53,7 +61,45 @@ namespace Diplom.Controllers
                 db.SaveChanges();
             }
 
-            return View(events);
+            if(paid != null)
+            {
+                var events = db.Events.Where(s => s.paid == true).OrderByDescending(s => s.Id).ToList();
+                return View(events);
+            }
+            else if(nopaid != null)
+            {
+                var events = db.Events.Where(s => s.paid == false).OrderByDescending(s => s.Id).ToList();
+                return View(events);
+            }
+            else if (all != null)
+            {
+                var events = db.Events.OrderByDescending(s => s.Id).ToList();
+                return View(events);
+            }
+            else if(viewcatigory != null)
+            {
+                var events = db.Events.Where(s => s.catigory == viewcatigory).OrderByDescending(s => s.Id).ToList();
+                return View(events);
+            }
+            else if(search != null)
+            {
+                var events = db.Events.ToList().Where(s => s.Name.Contains(search)).OrderByDescending(s => s.Id);
+                return View(events);
+			}
+            else if(close != null)
+            {
+				var events = db.Events.Where(s => s.status == "close").OrderByDescending(s => s.Id).ToList();
+				return View(events);
+			}
+            else
+            {
+                var events = db.Events.Where(s => s.status != "close").OrderByDescending(s => s.Id).ToList();
+                return View(events);
+            }
+
+            
+
+
         }
 
         public IActionResult Create()
@@ -72,7 +118,19 @@ namespace Diplom.Controllers
         public string fileName_three;
 
         [HttpPost]
-        public async Task<IActionResult> Create(string Name, string short_description, string description, IFormFile img_one, IFormFile img_two, IFormFile img_three, int age_limit, DateTime start_date, string city, int registrations_required, string catigory)
+        public async Task<IActionResult> Create(
+            string Name, 
+            string short_description, 
+            string description, 
+            IFormFile img_one, 
+            IFormFile img_two, 
+            IFormFile img_three, 
+            int age_limit, 
+            DateTime start_date, 
+            string city, 
+            int registrations_required, 
+            string catigory
+            )
         {
 
             if (img_one != null)
@@ -127,8 +185,20 @@ namespace Diplom.Controllers
 
         public async Task<IActionResult> Details(int ID)
         {
-            DateTime dateTime = DateTime.Now.Date;
 
+            Paid paid = db.Paid.FirstOrDefault(s => s.EventId == ID);
+
+
+            if (paid != null)
+            {
+                ViewBag.request = "true";
+            }
+            else
+            {
+                ViewBag.request = "false";
+            }
+
+            DateTime dateTime = DateTime.Now.Date;
 
             CountOfView[] countOfView = db.CountOfView.ToArray();
 
@@ -383,9 +453,52 @@ namespace Diplom.Controllers
         }
 
 
-        public async Task<IActionResult> AdminEventsList()
+        public async Task<IActionResult> AdminEventsList(int? paid, int? nopaid, int? all, string? viewcatigory, string? search, int? close)
         {
-            return View(db.Events.ToList());
+
+
+
+            var catigory = db.Category.ToList();
+
+            ViewBag.catigoryItems = catigory;
+
+
+
+            if (paid != null)
+            {
+                var events = db.Events.Where(s => s.paid == true).ToList();
+                return View(events);
+            }
+            else if (nopaid != null)
+            {
+                var events = db.Events.Where(s => s.paid == false).ToList();
+                return View(events);
+            }
+            else if (all != null)
+            {
+                var events = db.Events.ToList();
+                return View(events);
+            }
+            else if (viewcatigory != null)
+            {
+                var events = db.Events.Where(s => s.catigory == viewcatigory).ToList();
+                return View(events);
+            }
+            else if (search != null)
+            {
+                var events = db.Events.ToList().Where(s => s.Name.Contains(search));
+                return View(events);
+            }
+            else if (close != null)
+            {
+                var events = db.Events.Where(s => s.status == "close").ToList();
+                return View(events);
+            }
+            else
+            {
+                var events = db.Events.Where(s => s.status != "close").ToList();
+                return View(events);
+            }
         }
 
         public async Task<IActionResult> AdminEditEvents(int id)
@@ -770,8 +883,8 @@ namespace Diplom.Controllers
         }
 
 
-
-        public async Task<IActionResult> AdminPanel()
+		[Authorize(Roles = "admin")]
+		public async Task<IActionResult> AdminPanel()
         {
             return View();
         }
@@ -973,24 +1086,24 @@ namespace Diplom.Controllers
 
             if (all != null)
             {
-				CountOfView[] countOfViews = db.CountOfView.ToArray();
+				CountOfView[] countOfViews = db.CountOfView.OrderByDescending(s => s.Id).ToArray();
 				return View(countOfViews);
 			}
 
             else if (today != null) 
             {
-                CountOfView[] countOfViews = db.CountOfView.Where(s => s.date == DateTime.Now.Date).ToArray();
+                CountOfView[] countOfViews = db.CountOfView.Where(s => s.date == DateTime.Now.Date).OrderByDescending(s => s.Id).ToArray();
                 return View(countOfViews);
 			}
             else if (date != null)
             {
-                CountOfView[] countOfViews = db.CountOfView.Where(s => s.date == date).ToArray();
+                CountOfView[] countOfViews = db.CountOfView.Where(s => s.date == date).OrderByDescending(s => s.Id).ToArray();
                 return View(countOfViews);
             }
 
             else
             {
-				CountOfView[] countOfViews = db.CountOfView.ToArray();
+				CountOfView[] countOfViews = db.CountOfView.OrderByDescending(s => s.Id).ToArray();
 				return View(countOfViews);
 			}
         }
@@ -1017,8 +1130,54 @@ namespace Diplom.Controllers
             return RedirectToAction("AdminPanel", "Home");
         }
 
+        public async Task<IActionResult> RequestToPaid (int Id)
+        {
 
-	}
+
+            db.Paid.Add(new Paid { 
+                EventId = Id,
+                RequestDate = DateTime.Now
+            });
+
+            db.SaveChanges();
+
+            return RedirectToAction("Details", "Home", new { id = Id });
+        }
+
+        public async Task<IActionResult> AdminPaidList()
+        {
+            var paid = db.Paid.ToList();
+
+            return View(paid);
+        }
+
+        public async Task<IActionResult> Paid(int EventId)
+        {
+
+            Events events = db.Events.FirstOrDefault(e => e.Id == EventId);
+
+            if(events != null)
+            {
+                events.paid = true;
+				db.SaveChanges();
+			}
+
+            Paid paid = db.Paid.FirstOrDefault(e => e.EventId == EventId);
+
+            if(paid != null)
+            {
+                paid.done = true;
+                paid.DateOfCompletion = DateTime.Now;
+                db.SaveChanges();
+            }
+
+
+			return RedirectToAction("AdminPaidList", "Home");
+		}
+
+
+
+    }
 
 	
 

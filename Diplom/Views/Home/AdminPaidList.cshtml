@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Diplom.Models.Paid>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th>Id Мероприятия</th>
+            <th>Дата запроса</th>
+            <th>Выполнено?</th>
+            <th>Дата выполнения</th>
+            <th>Перейти на страницу</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td scope="row">@a.Id</td>
+                <td>@a.EventId</td>
+                <td>@a.RequestDate</td>
+                <td>@a.done</td>
+                <td>@a.DateOfCompletion</td>
+                <td><a asp-action="Details" asp-controller="Home" asp-route-id="@a.EventId" class="btn btn-primary">Подробнее</a></td>
+                @if(a.done == false)
+                {
+                    <td><a asp-action="Paid" asp-controller="Home" asp-route-EventId="@a.EventId" class="btn btn-primary">Подтвердить</a></td>
+                }
+                else
+                {
+                    <td>Выполнено</td>
+                }
+                
+            </tr>
+        }
+    </tbody>
+</table>

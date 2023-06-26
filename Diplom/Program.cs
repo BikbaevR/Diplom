@@ -22,11 +22,11 @@ builder.Services.AddDbContext<Diplom.Models.ContextDB>(options => options.UseSql
 
 builder.Services.AddIdentity<User, IdentityRole>(opts =>
 {
-    opts.Password.RequiredLength = 5;
-    opts.Password.RequireNonAlphanumeric = false;
-    opts.Password.RequireLowercase = false; 
-    opts.Password.RequireUppercase = false; 
-    opts.Password.RequireDigit = false; 
+    opts.Password.RequiredLength = 6;
+    opts.Password.RequireNonAlphanumeric = true;
+    opts.Password.RequireLowercase = true; 
+    opts.Password.RequireUppercase = true; 
+    opts.Password.RequireDigit = true; 
 })
 .AddEntityFrameworkStores<ApplicationContext>();
 //////////////////////////////////////////////////////////////

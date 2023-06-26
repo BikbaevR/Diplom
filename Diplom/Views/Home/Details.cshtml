@@ -19,7 +19,15 @@
 		@if (Model.created_by == getUser)
 		{
 			<a asp-action="Edit" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-primary">Изменить</a>
-		}
+
+
+			@if (@ViewBag.request == "false")
+			{
+				<a asp-action="RequestToPaid" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-primary">Монетизировать</a>
+			}
+
+
+	}
 
 
 		var getUserAge = userManager.Users.Where(s => s.UserName == getUser);
@@ -65,46 +73,50 @@
 </div>
 
 
-
-@if(Model.status != "close")
+@if (User.Identity.IsAuthenticated)
 {
-	@if(Model.age_limit < age)
+	@if (Model.status != "close")
 	{
-		@if (@ViewBag.register == "false")
+		@if (Model.age_limit < age)
+		{
+			@if (@ViewBag.register == "false")
+			{
+				<div>
+					<a asp-action="Registration" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-success">Зарегистрироваться на мероприятие</a>
+				</div>
+			}
+
+			@if (@ViewBag.register == "true")
+			{
+				<div>
+					<a asp-action="UnRegistration" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-danger">Отменить регистрацию</a>
+				</div>
+			}
+
+			<br />
+
+			@if (@ViewBag.register == "true" & @ViewBag.appreciated == "false")
+			{
+				<div>
+					<a asp-action="appreciated" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-success">Рекомендовать</a>
+				</div>
+			}
+
+			@if (@ViewBag.register == "true" & @ViewBag.appreciated == "true")
+			{
+				<div>
+					<a asp-action="Unappreciated" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-danger">Снять рекомендацию</a>
+				</div>
+			}
+		}
+		else
 		{
 			<div>
-				<a asp-action="Registration" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-success">Зарегистрироваться на мероприятие</a>
-			</div>
-		}
-
-		@if (@ViewBag.register == "true")
-		{
-			<div>
-				<a asp-action="UnRegistration" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-danger">Отменить регистрацию</a>
-			</div>
-		}
-
-		<br />
-
-		@if (@ViewBag.register == "true" & @ViewBag.appreciated == "false"){
-			<div>
-				<a asp-action="appreciated" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-success">Рекомендовать</a>
-			</div>
-		}
-
-		@if (@ViewBag.register == "true" & @ViewBag.appreciated == "true")
-		{
-			<div>
-				<a asp-action="Unappreciated" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-danger">Снять рекомендацию</a>
+				<p style="color:red"><b>Извините, вы не можете зарегистрироваться на данное мероприятие так как его возрастное ограничение @Model.age_limit лет</b></p>
 			</div>
 		}
 	}
-	else
-	{
-		<div>
-			<p style="color:red"><b>Извините, вы не можете зарегистрироваться на данное мероприятие так как его возрастное ограничение @Model.age_limit лет</b></p>
-		</div>
-	}
+
 }
 
 @if (User.Identity.IsAuthenticated)

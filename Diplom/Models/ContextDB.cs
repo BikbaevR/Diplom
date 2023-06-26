@@ -10,6 +10,7 @@ namespace Diplom.Models
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Catigory> Category { get; set; }
         public DbSet<CountOfView> CountOfView { get; set; }
+        public DbSet<Paid> Paid { get; set; }
 
 
 

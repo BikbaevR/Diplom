@@ -38,6 +38,7 @@
             <th scope="col">#</th>
             <th>Id Мероприятия</th>
             <th>Кол-во просмотров</th>
+            <th>Статистика по дням</th>
             <th>Перейти на страницу</th>
 
         </tr>
@@ -49,11 +50,13 @@
         
         @foreach (var a in @ViewBag.result)
         {
+            int Id = @a.EventsId;
             counts += 1;
             <tr>
                 <td scope="row">@counts</td>
                 <td>@a.EventsId</td>
                 <td>@a.count</td>
+                <td><a asp-action="StatisticsDetail" asp-controller="Home" asp-route-id="@Id" class="btn btn-primary">Перейти</a></td>
                 <td><a asp-action="Details" asp-controller="Home" asp-route-id="@a.EventsId" class="btn btn-primary">Подробнее</a></td>
             </tr>
         }

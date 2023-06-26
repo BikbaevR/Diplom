@@ -4,8 +4,44 @@
 
 
 
+
+<nav class="navbar navbar-expand-lg shadow navbar-light bg-light mb-3">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Home" asp-route-all="1" class="btn btn-primary">Все</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Home" asp-route-paid="1" class="btn btn-primary">Премиум</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Home" asp-route-nopaid="1" class="btn btn-primary">Обычные</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Home" asp-route-close="1" class="btn btn-primary">Закрытые</a>
+                </li>
+
+                @foreach (var cat in @ViewBag.catigoryItems)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-action="Index" asp-controller="Home" asp-route-viewcatigory="@cat.Id">@cat.name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
 <div class="flex-container">
-    <div class="first">
+
+    
+
+
+
+    <div class="first col-9">
         <div>
             @if (User.Identity.IsAuthenticated)
             {
@@ -16,34 +52,83 @@
 
         @foreach (var item in Model)
         {
-            <div class="info">
-                <div class="info-text">
-                    <p>
-                        <b>Название: </b>@item.Name<br />
-                        <b>Описание: </b>@item.short_description<br />
 
+            @if(item.paid == true)
+            {
+                <div class="info" style="background:#DCFFFB">
+                    <div class="info-text">
+                        <p>
+                            <b>Название: </b>@item.Name<br />
+                            <b>Описание: </b>@item.short_description<br />
+                            <b>Автор: </b>@item.created_by<br />
+                            <b>Начало: </b>@item.start_date<br />
+                            <b>Рейтинг: </b>@item.rating<br />
+                            <br />
 
-                        <b>Автор: </b>@item.created_by<br />
-                        <b>Начало: </b>@item.start_date<br />
-                        <b>Рейтинг: </b>@item.rating<br />
-                        <br />
+                            <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Подробнее</a>
+                            @if (User.IsInRole("admin"))
+                            {
+                                <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
+                                <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">Удалить</a>
+                            }
 
-                        <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Подробнее</a>
-                        @if (User.IsInRole("admin"))
-                        {
-                            <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
-                            <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">Удалить</a>
-                        }
+                        </p>
+                    </div>
 
-                    </p>
+                    <div class="img">
+                        <img class="img-img" src="~/img/events/@item.img_one">
+                    </div>
                 </div>
+                <div class="empty"></div>
+            }
+            else
+            {
+                <div class="info">
+                    <div class="info-text">
+                        <p>
+                            <b>Название: </b>@item.Name<br />
+                            <b>Описание: </b>@item.short_description<br />
+                            <b>Автор: </b>@item.created_by<br />
+                            <b>Начало: </b>@item.start_date<br />
+                            <b>Рейтинг: </b>@item.rating<br />
+                            <br />
 
-                <div class="img">
-                    <img class="img-img" src="~/img/events/@item.img_one">
+                            <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Подробнее</a>
+                            @if (User.IsInRole("admin"))
+                            {
+                                <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
+                                <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">Удалить</a>
+                            }
+
+                        </p>
+                    </div>
+
+                    <div class="img">
+                        <img class="img-img" src="~/img/events/@item.img_one">
+                    </div>
                 </div>
-            </div>
-            <div class="empty"></div>
+                <div class="empty"></div>
+            }
+
         }
+
+    </div>
+
+    <div class="col-3">
+        @*<div><a class="btn btn-primary">Популярные</a></div>*@
+        <div style="margin-bottom:29px;"><span><b>Рейтинговые</b></span></div>
+        <hr />
+
+        <div class="container bg-light shadow p-3">
+            <div class="">
+                @foreach (var top in @ViewBag.topRate)
+                {
+                    <p><a style="text-decoration:none; color:black" asp-action="Details" asp-controller="Home" asp-route-id="@top.Id">@top.Name</a></p>
+                    <hr />
+                }
+            </div>
+        </div>
+
 
     </div>
 

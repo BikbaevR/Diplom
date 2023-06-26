@@ -58,10 +58,8 @@ namespace Diplom.Controllers
 
         public IActionResult UserList()
         {
-            
-
-            //View(_userManager.Users.ToList());
-            return View(_userManager.Users.ToList());
+			//View(_userManager.Users.ToList());
+			return View(_userManager.Users.ToList());
         }
 
         public async Task<IActionResult> Edit(string userId)
